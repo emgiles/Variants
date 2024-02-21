@@ -24,8 +24,18 @@ Place all .bam files in a subdirectory. With the option -Ov this will create an 
 ```nohup bcftools filter -e 'F_MISSING > 0.5' -Ov -o species_pileup_date_called_filtered_fmiss50.vcf species_pileup_date_called_filtered.vcf &```
 ##### Create vcf with variants only
 ```nohup bcftools filter -i 'MAC >= 1' -Ov -o species_pileup_date_called_filtered_fmiss50_variant.vcf species_pileup_date_called_filtered_fmiss50.vcf &```
+Compress this file with bgzip found within bcftools
+```nohup bgzip species_pileup_date_called_filtered_fmiss50_variant.vcf &```
 ##### Create vcf with only invariant sites
 ```nohup bcftools filter -e 'MAF > 0.00' -Ov -o species_date_called_filtered_fmiss50_invariant.vcf species_pileup_date_called_filtered_fmiss50.vcf```
+Compress this file with bgzip found within bcftools
+```nohup bgzip species_pileup_date_called_filtered_fmiss50_variant.vcf &```
+##### Index variant and invariant vcfs
+Index using tabix which is from samtools, found in bcftools env.
+```tabix species_pileup_date_called_filtered_fmiss50_variant.vcf.gz```
+```tabix species_date_called_filtered_fmiss50_invariant.vcf.gz```
+##### Merge the variant and invariant indexed vcfs to create an allsites vcf
+```bcftools concat --allow-overlaps species_date_called_filtered_fmiss50_invariant.vcf.gz species_pileup_date_called_filtered_fmiss50_variant.vcf.gz -O z -o species_date_called_filtered_fmiss50_allsites.vcf.gz```
 
 ### Uncovering genetic structure
 #### Make a PCA of the genetic data with eigensoft
@@ -34,6 +44,7 @@ For this, you need a series of files: .ped, .pedind, .map. The .ped file gives y
 ```nohup bcftools view -h species_pileup_date_called_filtered_fmiss50_variant.vcf.gz | cut -f 1 | uniq | awk '{print $0"\t"$0}' > species_chrom-map.txt & ```
 ##### Create a ped file
 ```nohup vcftools --gzvcf species_pileup_date_called_filtered_fmiss50_variant.vcf.gz --plink --chrom-map species_chrom-map.txt --out species_pileup_date_called_filtered_fmiss50_variant.ped &```
+This will also create a *.map file with the snp location information
 ##### Create a pedind file
 ```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -f1-6 > tmp```
 ```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -c 1,2 | paste tmp -> species_pileup_date_called_filtered_fmiss50_variant.pedind```
