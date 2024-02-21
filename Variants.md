@@ -1,5 +1,5 @@
 # Population Genomics
-### Alignment of resequencing data to genomes
+### Alignment, Variant calling and filtering
 Before starting make sure to install miniconda, bwa-mem2, samtools, and all dependencies. Obtain reference genome and resequencing data. I suggest copying data to a new drive and working from said drive. A huge amount of storage space will be needed for all of the .bam files. Check quality of genome see "Genomes" tutorial. Check quality of resequence data.
 ```conda activate bwa-mem2```
 ### Interspecific protocol
@@ -26,4 +26,21 @@ Place all .bam files in a subdirectory. With the option -Ov this will create an 
 ```nohup bcftools filter -i 'MAC >= 1' -Ov -o species_pileup_date_called_filtered_fmiss50_variant.vcf species_pileup_date_called_filtered_fmiss50.vcf &```
 ##### Create vcf with only invariant sites
 ```nohup bcftools filter -e 'MAF > 0.00' -Ov -o species_date_called_filtered_fmiss50_invariant.vcf species_pileup_date_called_filtered_fmiss50.vcf```
+
+### Uncovering genetic structure
+#### Make a PCA of the genetic data with eigensoft
+For this, you need a series of files: .ped, .pedind, .map. The .ped file gives your genotypes, the .pedind file gives information about the sample and the population assignment, and the .map file gives information about the position of the loci in the genome. The pedind file is very light and useful for viewing down the line. These files can be generated from your vcf and a chrom-map.
+##### Create a chrom-map
+```nohup bcftools view -h species_pileup_date_called_filtered_fmiss50_variant.vcf.gz | cut -f 1 | uniq | awk '{print $0"\t"$0}' > species_chrom-map.txt & ```
+##### Create a ped file
+```nohup vcftools --gzvcf species_pileup_date_called_filtered_fmiss50_variant.vcf.gz --plink --chrom-map species_chrom-map.txt --out species_pileup_date_called_filtered_fmiss50_variant.ped &```
+##### Create a pedind file
+```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -f1-6 > tmp```
+```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -c 1,2 | paste tmp -> species_pileup_date_called_filtered_fmiss50_variant.pedind```
+The pedind file can be further parsed using sed or awk to modify sample names. Eigensoft does not like long sample names. If you do modify the sample names in the .pedind make sure to also change them in the .ped file. The last column of the pedind file should be 1 and the second to last column gives the population or species assignment. Modify accordingly.
+##### Parsing the map file
+The map file should have been created when you created the ped file. Parse the map file so that column 1 is not 0. You can set column 1 equal to 1. 
+```awk '{$1=1}1' your_file.map > modified_file.map```
+
+
 
