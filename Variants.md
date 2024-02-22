@@ -52,6 +52,8 @@ The pedind file can be further parsed using sed or awk to modify sample names. E
 ##### Parsing the map file
 The map file should have been created when you created the ped file. Parse the map file so that column 1 is not 0. You can set column 1 equal to 1. 
 ```awk '{$1=1}1' your_file.map > modified_file.map```
+Alternatively name chromosomes:
+```awk '{ if ($2 ~ /chrm1/) $1 = "1" ; print }' your_file.map > your_new_file.map```
 
 
 
