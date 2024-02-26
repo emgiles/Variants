@@ -52,14 +52,14 @@ This will also create a *.map file with the snp location information
 ##### Create a pedind file
 
 ```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -f1-6 > tmp```
-```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -c 1,2 | paste tmp -> species_pileup_date_called_filtered_fmiss50_variant.pedind```
+```cat species_pileup_date_called_filtered_fmiss50_variant.ped | cut -c 1,2 | paste tmp > species_pileup_date_called_filtered_fmiss50_variant.pedind```
 
 The pedind file can be further parsed using sed or awk to modify sample names. Eigensoft does not like long sample names. If you do modify the sample names in the .pedind make sure to also change them in the .ped file. The last column of the pedind file should be 1 and the second to last column gives the population or species assignment. Modify accordingly.
 
 ##### Parsing the map file
 The map file should have been created when you created the ped file. Parse the map file so that column 1 is not 0. You can set column 1 equal to 1. 
 
-```awk '{$1=1}1' your_file.map > modified_file.map```
+```awk -vOFS='\t' '{$1 = "1"; print}' your_file.map > modified_file.map```
 
 Alternatively name chromosomes:
 
