@@ -1,0 +1,13 @@
+parameter file: smartpca.par
+genotypename: species_date_called_filtered2_fmiss50_variant.ped.ped
+snpname: species_date_called_filtered2_fmiss50_variant_modified.map
+indivname: species_date_called_filtered2_fmiss50_variant.ped.pedind
+evecoutname: species_date_called_filtered2_fmiss50_variant.pca.evec
+evaloutname: species_date_called_filtered2_fmiss50_variant.pca.eval
+outputformat: EIGENSTRAT
+genotypeoutname: species_date_called_filtered2_fmiss50_variant.geno
+snpoutname: species_date_called_filtered2_fmiss50_variant.snp
+indivoutname: species_date_called_filtered2_fmiss50_variant.ind
+familynames: NO
+phylipoutname: species_date_called_filtered2_fmiss50_variant.phy
+numoutlieriter: 0
