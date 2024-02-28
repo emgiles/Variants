@@ -24,10 +24,12 @@ Place all .bam files in a subdirectory. With the option -Ov this will create an 
 ```nohup bcftools filter -e 'F_MISSING > 0.5' -Ov -o species_pileup_date_called_filtered_fmiss50.vcf species_pileup_date_called_filtered.vcf &```
 ##### Create vcf with variants only
 ```nohup bcftools filter -i 'MAC >= 1' -Ov -o species_pileup_date_called_filtered_fmiss50_variant.vcf species_pileup_date_called_filtered_fmiss50.vcf &```
+
 Compress this file with bgzip found within bcftools
 ```nohup bgzip species_pileup_date_called_filtered_fmiss50_variant.vcf &```
 ##### Create vcf with only invariant sites
 ```nohup bcftools filter -e 'MAF > 0.00' -Ov -o species_date_called_filtered_fmiss50_invariant.vcf species_pileup_date_called_filtered_fmiss50.vcf```
+
 Compress this file with bgzip found within bcftools
 ```nohup bgzip species_pileup_date_called_filtered_fmiss50_variant.vcf &```
 ##### Index variant and invariant vcfs
@@ -59,11 +61,21 @@ The pedind file can be further parsed using sed or awk to modify sample names. E
 ##### Parsing the map file
 The map file should have been created when you created the ped file. Parse the map file so that column 1 is not 0. You can set column 1 equal to 1. 
 
-```awk -vOFS='\t' '{$1 = "1"; print}' your_file.map > modified_file.map```
+```awk -vOFS='\t' '{$1 = "1"; print}' species_pileup_date_called_filtered_fmiss50_variant.map > species_pileup_date_called_filtered_fmiss50_variant_modified.map```
 
 Alternatively name chromosomes:
 
 ```awk '{ if ($2 ~ /chrm1/) $1 = "1" ; print }' your_file.map > your_new_file.map```
+
+##### Create a parameter file for smartpca
+To make a pca of your variant data, first create a parameter file to tell the program what to do. There is an example parameter file given called smartpca.par. Input the names of your files for the .ped, .pedind, and .map input options. Name your output options keeping the extensions the same.
+
+##### Run smartpca
+Eigensoft must be previously installed. You can use conda to install. 
+
+```smartpca -p smartpca.par```
+
+Then export results and visualize in R with smartpca.R script.
 
 
 
