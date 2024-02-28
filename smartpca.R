@@ -1,17 +1,15 @@
 
 getwd()
-#setwd("/Users/emily/Dropbox/School/Thesis/Variants-Ch2/eigensoft/26_nov_2023/")
-#setwd("/Users/emily/Dropbox/School/Thesis/Variants-Ch2/eigensoft/27_nov_2023/")
-setwd("/Users/emily/Dropbox/School/Thesis/Variants-Ch2/eigensoft/27_nov_2023_LD/")
+setwd("/Path_to_files/")
 
 
-eval <- read.table("all_samples_filtrado_final.recode.renamed_27nov2023_LD.pca.eval")
-#eval <- read.table("all_samples_filtrado_final.recode.renamed_17nov2023.pca.eval")
+eval <- read.table("species_date_called_filtered2_fmiss50_variant.pca.eval")
+#eval <- read.table("species_date_called_filtered2_fmiss50_variant.pca.eval")
 head(eval)
 evec1.pc <- round(eval[1,1]/sum(eval)*100,digits=2)
 evec2.pc <- round(eval[2,1]/sum(eval)*100,digits=2)
-evec <- read.table("all_samples_filtrado_final.recode.renamed_27nov2023_LD.pca.evec")
-#evec <- read.table("all_samples_filtrado_final.recode.renamed_17nov2023.pca.evec")
+evec <- read.table("species_date_called_filtered2_fmiss50_variant.pca.evec")
+#evec <- read.table("species_date_called_filtered2_fmiss50_variant.pca.evec")
 head(evec)
 
 ###example plot
@@ -20,7 +18,7 @@ plot(evec[,2], evec[,3], xlab=paste("eigenvector1\n",evec1.pc, "% of observed ge
 
 ###plot1
 # SVG graphics device
-svg("PCA_with_lables.svg")
+svg("PCA_with_labels.svg")
 par(mar = c(6.1, 6.1, 2.1, 2.1))
 plot(evec[,2], evec[,3], xlab=paste("eigenvector1\n",evec1.pc, "% of observed genetic variation", sep=""), 
      ylab=paste("eigenvector2\n",evec2.pc, "% of observed genetic variation", sep=""), 
